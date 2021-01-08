@@ -1,7 +1,10 @@
 <template>
   <div id="app">
+    <div class="error" v-if="error">
+      Sorry, seems your internet connection is bad.
+    </div>
     <div class="container">
-      <h1 class="heading">Avalon Perez</h1>
+      <h1 class="heading">{{ user.name }}</h1>
       <img src="@/assets/pink.png" class="container__img" alt />
       <nav class="container__nav">
         <ul class="nav">
@@ -15,7 +18,10 @@
     </div>
     <ul class="social-links">
       <li>
-        <a href="#" class="social-links__link">
+        <a
+          :href="`//instagram.com/${user.social_media.instagram}`"
+          class="social-links__link"
+        >
           <img
             src="@/assets/instagram-brands.svg"
             alt
@@ -24,7 +30,10 @@
         </a>
       </li>
       <li>
-        <a href="#" class="social-links__link">
+        <a
+          :href="`//twitter.com/${user.social_media.twitter}`"
+          class="social-links__link"
+        >
           <img
             src="@/assets/twitter-square-brands.svg"
             alt
@@ -33,7 +42,10 @@
         </a>
       </li>
       <li>
-        <a href="#" class="social-links__link">
+        <a
+          :href="`//snapchat.com/add/${user.social_media.snapchat}`"
+          class="social-links__link"
+        >
           <img
             src="@/assets/snapchat-square-brands.svg"
             alt
@@ -42,7 +54,10 @@
         </a>
       </li>
       <li>
-        <a href="#" class="social-links__link">
+        <a
+          :href="`maito:${user.social_media.email}`"
+          class="social-links__link"
+        >
           <img
             src="@/assets/envelope-square-solid.svg"
             alt
@@ -55,8 +70,30 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  name: "App"
+  name: "App",
+  data() {
+    return {
+      user: {},
+      error: ""
+    };
+  },
+  mounted() {
+    axios
+      .get("https://hirng-x2021.glitch.me/api", {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      })
+      .then(response => {
+        this.user = response.data;
+      })
+      .catch(error => {
+        this.error = error;
+      });
+  }
 };
 </script>
 
@@ -88,6 +125,12 @@ body {
 }
 #app {
   position: relative;
+}
+
+.error {
+  background-color: white;
+  padding: 2rem 2rem;
+  border-top: 1rem solid crimson;
 }
 
 .heading {
